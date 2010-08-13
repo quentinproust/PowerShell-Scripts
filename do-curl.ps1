@@ -1,13 +1,25 @@
 # Function CURL
 # Used for requesting a web resource.
-function Do-Curl([string] $url) {
+
+param 
+(
+    [string]$url = $null
+);
+
+function Do-Curl() 
+{
+    param(
+        [string]$url = $null
+    );
 
     trap [Exception] { 
         write $("ERREUR : " + $_.Exception.Message); 
         continue; 
     }
 
-    $client = $client = (new-object net.webclient)
-    $resource = $client.DownloadString($url)
-    Write $resource
+	if($url -ne $null) {
+		$client = $client = (new-object net.webclient)
+		$resource = $client.DownloadString($url)
+		Write $resource
+	}
 }
