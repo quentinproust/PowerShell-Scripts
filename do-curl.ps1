@@ -1,9 +1,6 @@
-# Faire un curl
-#$null = ""
-#Load System.web assembly
-#[reflection.assembly]::loadwithpartialname("system.net") > $null
-
-function CurlURL([string] $url) {
+# Function CURL
+# Used for requesting a web resource.
+function Do-Curl([string] $url) {
 
     trap [Exception] { 
         write $("ERREUR : " + $_.Exception.Message); 
@@ -14,5 +11,3 @@ function CurlURL([string] $url) {
     $resource = $client.DownloadString($url)
     Write $resource
 }
-
-CurlURL $args[0] 
