@@ -1,15 +1,6 @@
 #----------------------------------------------------------------
 # Tail.ps1 
 #----------------------------------------------------------------
-param
-(
-	[string]$filespec = $null,
-	[int]$num_bytes = -1,
-	[int]$num_lines = -1,
-	[bool]$follow = $true,
-	[int]$sleep = 1,
-	[bool]$quiet = $false
-);
 
 function Tail()
 {
@@ -18,7 +9,7 @@ function Tail()
 		[string]$filespec = $null,
 		[int]$num_bytes = -1,
 		[int]$num_lines = -1,
-		[bool]$follow = $false,
+		[bool]$follow = $true,
 		[int]$sleep = 1,
 		[bool]$quiet = $false
 	);
@@ -77,6 +68,3 @@ function Tail()
 		}
 	}
 }
-
-Tail -filespec $filespec -num_bytes $num_bytes -num_lines $num_lines `
-	-follow $follow -sleep $sleep -quiet $quiet;
