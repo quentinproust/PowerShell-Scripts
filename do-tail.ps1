@@ -1,5 +1,7 @@
 #----------------------------------------------------------------
 # Tail.ps1 
+# Created by Joe Pruitt : 
+# http://devcentral.f5.com/weblogs/Joe/archive/2009/04/22/unix-to-powershell---tail.aspx
 #----------------------------------------------------------------
 
 function Tail()
