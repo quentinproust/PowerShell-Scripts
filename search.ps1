@@ -14,7 +14,7 @@ function Search-MSDN
         $url += $args[$i];
     }
 
-    $url += '&locale=en-us&refinement=86&ac=3';
+    $url += '&locale=en-us&ac=3';
 
     start-process $url
 }

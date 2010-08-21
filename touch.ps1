@@ -1,4 +1,4 @@
-function do-touch { 
+function touch { 
 	param(
 		[string] $fil
 	)
