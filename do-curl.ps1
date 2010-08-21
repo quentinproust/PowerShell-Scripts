@@ -31,7 +31,8 @@ param
 		$webrequest = [system.Net.HttpWebRequest]::create($url);
         $webrequest.set_Method($method);
 
-        if($auth -ne $null) {
+		$shouldAuth = [boolean] [String]::IsNullOrEmpty($auth);
+        if(!$shouldAuth) {
             $pass = Read-Host -assecurestring "Please enter your password"
             $credentials = new-object System.Net.NetworkCredential ($auth, $pass);
             $webrequest.set_Credentials($credentials);
