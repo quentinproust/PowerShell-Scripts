@@ -11,7 +11,7 @@
 #        so it cannot be read.
 #
 
-function Do-Curl() 
+function Curl() 
 {
 param 
 (
