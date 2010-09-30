@@ -8,6 +8,10 @@ function strip-extension ([string] $filename) {
 	[system.io.path]::getfilenamewithoutextension($filename)
 }
 
+function emacs () {
+	d:/work/tools/emacs/emacs-23.2/bin/runemacs.exe $args[0];
+}
+
 # Go location
 if( $GLOBAL:go_locations -eq $null ) {
 $GLOBAL:go_locations = @{};
@@ -65,28 +69,27 @@ function la { ls -force }
 
 ###############################
 
-# Use de scripts
+# Load scripts
 . ./do-tail.ps1
 . ./search.ps1
-. ./do-curl.ps1
+. ./curl.ps1
+. ./highlight.ps1
+. ./touch.ps1
+. ./wget.ps1
 
-# Git utils
-. ./GitUtils.ps1
-. ./GitPrompt.ps1
-
-# Use Git tab expansion
-. ./GitTabExpansion.ps1
+# Load Posh Git
+Import-Module ../posh-git/posh-git.psm1
 
 Pop-Location
 
 # Set up a simple prompt, adding the git prompt parts inside git repos
 function prompt {
     Write-Host($pwd) -nonewline
-        
+
     # Git Prompt
     $Global:GitStatus = Get-GitStatus
     Write-GitStatus $GitStatus
-      
+
     return "> "
 }
 
@@ -97,7 +100,7 @@ if(-not (Test-Path Function:\DefaultTabExpansion)) {
 # Set up tab expansion and include git expansion
 function TabExpansion($line, $lastWord) {
     $lastBlock = [regex]::Split($line, '[|;]')[-1]
-    
+
     switch -regex ($lastBlock) {
         # Execute git tab completion for all git-related commands
         'git (.*)' { GitTabExpansion $lastBlock }
@@ -106,6 +109,5 @@ function TabExpansion($line, $lastWord) {
     }
 }
 
-Enable-GitColors
-
-Pop-Location
+# Return to home
+go home
