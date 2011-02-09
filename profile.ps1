@@ -2,8 +2,10 @@ Push-Location (Split-Path -Path $MyInvocation.MyCommand.Definition -Parent)
 
 ###############################
 
-# Initialize some configuration variables
 $PSScriptRoot = "d:/PoshScript"
+
+# Mount script folders
+New-PSDrive -name psscript -PSProvider FileSystem -Root d:/PoshScript
 
 # function to include path in powershell path
 function poshpath([string] $p) {
@@ -17,12 +19,12 @@ function poshpath([string] $p) {
 . ./highlight.ps1
 . ./touch.ps1
 . ./wget.ps1
-
+New-Alias -Name sudo 'psscript:\Sudo.ps1'
 # Load Posh Growl
-. $PSScriptRoot/Send-Growl3.0.ps1
+. psscript:/Send-Growl3.0.ps1
 
 # Load Posh Git
-Import-Module $PSScriptRoot/posh-git/posh-git.psm1
+Import-Module psscript:/posh-git/posh-git.psm1
 #Set-Alias git D:/Projet/Forks/git-achievements/git-achievements.ps1
 
 
@@ -203,5 +205,5 @@ function TabExpansion($line, $lastWord) {
 
 # Return to home
 #go home
-#clear
+clear
 cd d:/
