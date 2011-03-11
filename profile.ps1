@@ -20,6 +20,8 @@ function poshpath([string] $p) {
 . ./touch.ps1
 . ./wget.ps1
 New-Alias -Name sudo 'psscript:\Sudo.ps1'
+New-Alias -Name reload-profile 'd:/projet/Powershell-Scripts/profile.ps1'
+
 # Load Posh Growl
 . psscript:/Send-Growl3.0.ps1
 
@@ -94,14 +96,26 @@ function gf () {
     } elseif($args[0].equals("tail")) {
         $logFile = [String]::concat($log, "server.log")
         Write $logFile
-        tail -f $logFile 
+        d:/tools/cygwin/bin/tailf.exe $logFile 
     }
 
 }
 
 function solr () {
     $query = $args[0]
-    curl "http://localhost:8080/solr/select/?q=$query&indent=on&wt=json"
+
+      if($query.equals("-clean")) {
+        curl http://localhost:8080/solr/update/?commit=true -H "Content-Type: text/xml" --data-binary '<delete><query>*:*</query></delete>'
+      } elseif($query.equals("-full")) {
+        curl "http://localhost:8080/solr/admin/dataimport?command=full-import&verbose" | sed -e 's/<[^<]*>/ /g'
+      } elseif($query.equals("-delta")) {
+        curl "http://localhost:8080/solr/admin/dataimport?command=delta-import&verbose" | sed -e 's/<[^<]*>/ /g'
+      } elseif($query.equals("-status")) {
+        curl "http://localhost:8080/solr/admin/dataimport" | sed -e 's/</\n</g' | grep 'str'
+      } else{
+        echo "http://localhost:8080/solr/select/?q=$query&indent=on&wt=json"
+        curl "http://localhost:8080/solr/select/?q=$query&indent=on&wt=json"
+      }
 }
 
 
@@ -177,7 +191,7 @@ function prompt {
     $path = $pwd.ToString().SubString($pwd.ToString().LastIndexOf("\") + 1)
     $drive = $pwd.ToString().SubString(0,1).ToLower() 
     
-    Write-Host("$drive"+":"+ "$path") -nonewline
+    Write-Host("$drive"+":"+ "$path") -nonewline -foregroundcolor Green 
 
     # Git Prompt
     $Global:GitStatus = Get-GitStatus
