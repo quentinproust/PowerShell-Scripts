@@ -62,6 +62,10 @@ function ms () {
     }
 }
 
+function get-sln() {
+    ls -in *.sln -r | select -first 1 | %{ ii $_.FullName }
+}
+
 # Adding some function for glassfish server
 function gf () {
 #GlassFish directory
