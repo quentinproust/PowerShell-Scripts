@@ -7,6 +7,7 @@ $PSScriptRoot = "d:/PoshScript"
 # Mount script folders
 New-PSDrive -name psscript -PSProvider FileSystem -Root d:/PoshScript
 New-PSDrive -name forks -PSProvider FileSystem -Root d:/Projet/Forks/
+New-PSDrive -name poshscript -PSProvider FileSystem -Root "d:/Projet/PowerShell-Scripts/"
 
 # function to include path in powershell path
 function poshpath([string] $p) {
@@ -22,14 +23,22 @@ function poshpath([string] $p) {
 . ./solr.ps1
 . ./utils.ps1
 . ./prompt.ps1
-
 . ./aliases.ps1
 
-New-Alias -Name sudo 'psscript:\Sudo.ps1'
-New-Alias -Name reload-profile 'd:/projet/Powershell-Scripts/profile.ps1'
+function pro { gvim $profile }
 
-# Load Posh Growl
-. psscript:/Send-Growl3.0.ps1
+function start-iisexpress () {
+	param(
+		[string]$port=7070
+	);
+
+	#location : use the current folder
+	$curr = (Get-Location -PSProvider FileSystem).ProviderPath;
+
+	#start iss
+	& 'C:\Program Files\IIS Express\iisexpress.exe' /path:$curr /port:$port
+}
+
 
 # Load Posh Git
 Import-Module psscript:/posh-git/posh-git.psm1
@@ -40,6 +49,8 @@ Import-Module forks:/psake/psake.psm1
 
 poshpath "C:\Program Files\Git\bin"
 poshpath "C:\Program Files\GnuWin32\bin"
+
+new-alias -name "g" D:\Projet\Forks\git-achievements\git-achievements.ps1
 
 if(-not (Test-Path Function:\DefaultTabExpansion)) {
     Rename-Item Function:\TabExpansion DefaultTabExpansion
@@ -57,7 +68,5 @@ function TabExpansion($line, $lastWord) {
     }
 }
 
-# Return to home
-#go home
 #clear
 cd d:/

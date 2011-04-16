@@ -1,23 +1,44 @@
-# Adding some function for glassfish server
+#----------------------------------------------------------------------------
+#   Commands to control glassfish.
+#   Argument:
+#       -start : will obviously start glassfish.
+#       -stop  : will stop glassfish.
+#       -restart : do I really need to tell you what it does ?
+#       -tail : tail the server.log file for domain1.
+#----------------------------------------------------------------------------
+
 function gf () {
-#GlassFish directory
+    # Configuration for path to glassfish
+    # Bin folder path to execute command on glassfish
     $bin = "D:\Work\Tools\glassfish\bin\"
+    # Log folder to tail
     $log = "D:\Work\Tools\glassfish\domains\domain1\logs\"
 
+    # A usefull function to execut the bat file from powershell. 
     function execBat([string] $bat) {
         $file = [String]::concat($bin, $bat)
         cmd /c $file
     }
 
+    function growl-state($isOk, $message) {
+        $icon = ""
+        if($isOk -eq $True) {
+            $icon = "d:/Poshscript/glassfish.gif"
+        } else {
+            $icon = "d:/Poshscript/red.ico"
+        }
+        growl Glassfish /t:$message /i:$icon
+    }
+
     if($args[0].equals("start")) {
         Write "Starting glassfish server"
         execBat "asadmin.bat start-domain domain1"
-        
-        Send-Growl-Easy Glassfish Start "Glassfish state changed" "Glassfish has been succesfully started"
+        growl-state $True "Glassfish was started"
+
     } elseif($args[0].equals("stop")) {
         Write "Stopping glassfish server"
         execBat "asadmin.bat stop-domain domain1"
-    Send-Growl-Easy Glassfish Start "Glassfish state changed" "Glassfish has been succesfully stop"
+        growl-state $True "Glassfish was stopped"
 
     } elseif($args[0].equals("restart")) {
         Write "Restarting glassfish server"
@@ -25,8 +46,7 @@ function gf () {
         execBat "asadmin.bat stop-domain domain1"
         Write "Starting glassfish server"
         execBat "asadmin.bat start-domain domain1"
-
-    Send-Growl-Easy Glassfish Start "Glassfish state changed" "Glassfish has been succesfully restarted"
+        growl-state $True "Glassfish was restarted"
 
     } elseif($args[0].equals("tail")) {
         $logFile = [String]::concat($log, "server.log")

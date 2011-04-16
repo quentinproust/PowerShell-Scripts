@@ -6,11 +6,17 @@ function growl-bad($module, $message) {
     & "C:/Program Files/Growl for Windows/growlnotify.com" $module /t:$message /i:D:\PoshScript\red.ico
 }
 
-function maven-build($module, $command) {
-    cmd /c $command > /dev/null
+function maven-build($module, $command, $test) {
+$command = "$command --offline"
+    if($test -eq $False) {
+        $command = "$command -Dmaven.test.skip=true"
+    }
 
-    $build = cat /dev/null | grep "BUILD ERROR"
-    if($build -eq $null) {
+    echo $command
+    cmd /c $command | Tee-Object /dev/null
+
+    $build = cat /dev/null | grep "BUILD SUCCES"
+    if($build -ne $null) {
        growl-ok $module "Build Success" 
     } else {
        cat /dev/null
