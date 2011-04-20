@@ -7,12 +7,18 @@
 #       -tail : tail the server.log file for domain1.
 #----------------------------------------------------------------------------
 
+$glassfishProperties = @{
+    "installFolder" = "D:/work/tools/glassfish";
+    "okIcon" = "d:/Poshscript/glassfish.gif";
+    "failIcon" = "d:/Poshscript/red.ico"
+};
+
 function gf () {
     # Configuration for path to glassfish
     # Bin folder path to execute command on glassfish
-    $bin = "D:\Work\Tools\glassfish\bin\"
+    $bin = $glassfishProperties.Get_Item("installFolder") + "/bin/"
     # Log folder to tail
-    $log = "D:\Work\Tools\glassfish\domains\domain1\logs\"
+    $log = $glassfishProperties.Get_Item("installFolder") + "/domains/domain1/logs/"
 
     # A usefull function to execut the bat file from powershell. 
     function execBat([string] $bat) {
@@ -23,9 +29,9 @@ function gf () {
     function growl-state($isOk, $message) {
         $icon = ""
         if($isOk -eq $True) {
-            $icon = "d:/Poshscript/glassfish.gif"
+            $icon = $glassfishProperties.Get_Item("okIcon") 
         } else {
-            $icon = "d:/Poshscript/red.ico"
+            $icon = $glassfishProperties.Get_Item("failIcon") 
         }
         growl Glassfish /t:$message /i:$icon
     }
@@ -49,7 +55,7 @@ function gf () {
         growl-state $True "Glassfish was restarted"
 
     } elseif($args[0].equals("tail")) {
-        $logFile = [String]::concat($log, "server.log")
+        $logFile = $log + "server.log"
         Write $logFile
         d:/tools/cygwin/bin/tailf.exe $logFile 
     }
